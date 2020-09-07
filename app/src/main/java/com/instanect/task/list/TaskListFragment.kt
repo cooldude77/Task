@@ -6,17 +6,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.instanect.task.R
+import com.instanect.task.business_layer.TaskEntity
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class TaskListFragment : Fragment() {
 
+
+    private var list: List<TaskEntity> = ArrayList()
+
+    companion object {
+
+        public fun newInstance(list: List<TaskEntity>): TaskListFragment {
+            var f = TaskListFragment()
+            f.list = list
+            return f
+
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val taskListAdapter = TaskListAdapter(list)
+        val recycler = activity?.findViewById<RecyclerView>(R.id.recycler_view_task_list)
+        recycler?.adapter = taskListAdapter
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.task_list_fragment, container, false)
@@ -31,4 +50,5 @@ class TaskListFragment : Fragment() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.title = "Task List"
     }
+
 }

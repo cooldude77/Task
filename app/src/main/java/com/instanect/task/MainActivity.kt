@@ -15,6 +15,7 @@ import com.instanect.task.list.TaskListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
@@ -25,14 +26,7 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.id_fragment,
-                TaskListFragment(), "fragment_task_list"
-            )
-            .addToBackStack(null)
-            .commit();
-
+        loadList()
         fab.setOnClickListener { view ->
             supportFragmentManager.beginTransaction()
                 .replace(
@@ -81,10 +75,39 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
 
             val task = TaskEntity()
             task.task = text
-            db.taskDAO?.insert(task)
+            db.taskDAO.insert(task)
             Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
         }
     }
+
+    fun loadList() {
+        GlobalScope.launch { // coroutine on Main
+            val db = getDb()
+
+            val list = getDb().taskDAO.getAll();
+        }
+
+        runBlocking {
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.id_fragment,
+                    TaskListFragment.newInstance(ArrayList()), "fragment_task_list"
+                )
+                .addToBackStack(null)
+                .commit();
+        }
+    }
+
+    /*
+
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.id_fragment,
+                    TaskListFragment.newInstance(ArrayList()), "fragment_task_list"
+                )
+                .addToBackStack(null)
+                .commit();
+     */
 
     override fun onBackStackChanged() {
         TODO("Not yet implemented")
