@@ -11,10 +11,13 @@ import com.instanect.task.business_layer.TaskEntity
 class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAdapter.ViewHolder>() {
 
     private var list: List<TaskEntity> = ArrayList();
+    init {
+        this.list = list
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewId: TextView? = null
-        val textViewTask: TextView? = null
+        val textViewTask: TextView? = itemView.findViewById(R.id.editTextTask)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,4 +40,5 @@ class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAda
         this.list = newData
         notifyDataSetChanged()
     }
-}
+
+ }

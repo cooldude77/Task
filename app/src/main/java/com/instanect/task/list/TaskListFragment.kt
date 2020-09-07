@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instanect.task.R
 import com.instanect.task.business_layer.TaskEntity
@@ -33,12 +34,14 @@ class TaskListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val view = inflater.inflate(R.layout.task_list_fragment, container, false)
         val taskListAdapter = TaskListAdapter(list)
-        val recycler = activity?.findViewById<RecyclerView>(R.id.recycler_view_task_list)
-        recycler?.adapter = taskListAdapter
+        val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_task_list)
 
+        recycler.adapter = taskListAdapter
+        recycler.layoutManager = LinearLayoutManager(activity);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.task_list_fragment, container, false)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

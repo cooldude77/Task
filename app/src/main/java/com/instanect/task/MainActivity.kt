@@ -21,6 +21,8 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
     TaskCreateInterface {
 
+    private var list: List<TaskEntity> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -84,14 +86,14 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         GlobalScope.launch { // coroutine on Main
             val db = getDb()
 
-            val list = getDb().taskDAO.getAll();
+            list = getDb().taskDAO.getAll();
         }
 
         runBlocking {
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.id_fragment,
-                    TaskListFragment.newInstance(ArrayList()), "fragment_task_list"
+                    TaskListFragment.newInstance(list), "fragment_task_list"
                 )
                 .addToBackStack(null)
                 .commit();
