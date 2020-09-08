@@ -17,13 +17,20 @@ import com.instanect.task.business_layer.TaskEntity
 class TaskListFragment : Fragment() {
 
 
+    private lateinit var taskListAdapter: TaskListAdapter
     private var list: List<TaskEntity> = ArrayList()
+
+    private var taskListFragmentInterface: TaskListFragmentInterface? = null
 
     companion object {
 
-        public fun newInstance(list: List<TaskEntity>): TaskListFragment {
+        public fun newInstance(
+            list: List<TaskEntity>,
+            taskListFragmentInterface: TaskListFragmentInterface?
+        ): TaskListFragment {
             var f = TaskListFragment()
             f.list = list
+            f.taskListFragmentInterface = taskListFragmentInterface
             return f
 
         }
@@ -35,7 +42,7 @@ class TaskListFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.task_list_fragment, container, false)
-        val taskListAdapter = TaskListAdapter(list)
+        taskListAdapter = TaskListAdapter(list)
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_task_list)
 
         recycler.adapter = taskListAdapter
@@ -54,4 +61,13 @@ class TaskListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Task List"
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        taskListFragmentInterface?.onTaskListAdded();
+    }
+
+    public fun updateList(list: List<TaskEntity>) {
+        this.list = list
+        taskListAdapter.setData(list)
+    }
 }

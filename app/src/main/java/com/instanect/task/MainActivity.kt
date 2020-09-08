@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.instanect.task.business_layer.TaskDatabase
@@ -12,14 +11,15 @@ import com.instanect.task.business_layer.TaskEntity
 import com.instanect.task.create.TaskCreateFragment
 import com.instanect.task.create.TaskCreateInterface
 import com.instanect.task.list.TaskListFragment
+import com.instanect.task.list.TaskListFragmentInterface
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 
-class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedListener,
-    TaskCreateInterface {
+class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentInterface {
 
     private var list: List<TaskEntity> = ArrayList()
 
@@ -28,12 +28,14 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        loadList()
+        loadListFragment()
+
         fab.setOnClickListener { view ->
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.id_fragment,
-                    TaskCreateFragment.newInstance(this)
+                    TaskCreateFragment.newInstance(this),
+                    "TAG_CREATE"
                 )
                 .addToBackStack(null)
                 .commit();
@@ -82,37 +84,36 @@ class MainActivity : AppCompatActivity(), FragmentManager.OnBackStackChangedList
         }
     }
 
-    fun loadList() {
-        GlobalScope.launch { // coroutine on Main
-            val db = getDb()
-
+    private fun loadList() {
+        GlobalScope.launch(Dispatchers.IO) { // coroutine on Main
             list = getDb().taskDAO.getAll();
-        }
-
-        runBlocking {
-            supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.id_fragment,
-                    TaskListFragment.newInstance(list), "fragment_task_list"
-                )
-                .addToBackStack(null)
-                .commit();
+            withContext(Dispatchers.Main) {
+                updateList(list)
+            }
         }
     }
 
-    /*
+    private fun loadListFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.id_fragment,
+                TaskListFragment.newInstance(list, this),
+                "TAG_LIST"
+            )
+            .addToBackStack(null)
+            .commit();
+    }
 
-            supportFragmentManager.beginTransaction()
-                .replace(
-                    R.id.id_fragment,
-                    TaskListFragment.newInstance(ArrayList()), "fragment_task_list"
-                )
-                .addToBackStack(null)
-                .commit();
-     */
+    private fun updateList(list: List<TaskEntity>) {
+        val listFragment =
+            supportFragmentManager.findFragmentByTag("TAG_LIST") as TaskListFragment;
 
-    override fun onBackStackChanged() {
-        TODO("Not yet implemented")
+        listFragment.updateList(list)
+
+    }
+
+    override fun onTaskListAdded() {
+        loadList()
     }
 
 
