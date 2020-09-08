@@ -8,23 +8,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instanect.task.R
 import com.instanect.task.business_layer.TaskEntity
 
-class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAdapter.ViewHolder>() {
+class TaskListAdapter(list: List<TaskEntity>, taskListAdapterListener: TaskListAdapterListener) :
+    RecyclerView.Adapter<TaskListAdapter.ViewHolder>(),
+    View.OnClickListener {
 
     private var list: List<TaskEntity> = ArrayList();
+    private var taskListAdapterListener: TaskListAdapterListener? = null
 
     init {
         this.list = list
+        this.taskListAdapterListener = taskListAdapterListener
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textViewId: TextView? = view.findViewById(R.id.textViewIdTask)
         val textViewTask: TextView? = view.findViewById(R.id.textViewTask)
 
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.task_list_item,
-            parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(
+            R.layout.task_list_item,
+            parent, false
+        )
         return ViewHolder(v)
     }
 
@@ -32,6 +39,7 @@ class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAda
         val task = list[position];
         holder.textViewTask?.text = task.task
         holder.textViewId?.text = task.idTask.toString()
+        holder.itemView.setOnClickListener(this)
     }
 
     override fun getItemCount(): Int {
@@ -42,6 +50,10 @@ class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAda
     fun setData(newData: List<TaskEntity>) {
         this.list = newData
         notifyDataSetChanged()
+    }
+
+    override fun onClick(v: View?) {
+        taskListAdapterListener?.onItemClick(v)
     }
 
 }

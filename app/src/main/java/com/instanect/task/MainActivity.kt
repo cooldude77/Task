@@ -3,6 +3,7 @@ package com.instanect.task
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
@@ -114,6 +115,10 @@ class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentI
 
     override fun onTaskListAdded() {
         loadList()
+    }
+
+    override fun onClick(v: View?) {
+
     }
 
 

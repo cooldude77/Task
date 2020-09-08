@@ -14,7 +14,7 @@ import com.instanect.task.business_layer.TaskEntity
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class TaskListFragment : Fragment() {
+class TaskListFragment : Fragment(),TaskListAdapterListener {
 
 
     private lateinit var taskListAdapter: TaskListAdapter
@@ -42,7 +42,7 @@ class TaskListFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.task_list_fragment, container, false)
-        taskListAdapter = TaskListAdapter(list)
+        taskListAdapter = TaskListAdapter(list,this)
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_task_list)
 
         recycler.adapter = taskListAdapter
@@ -69,5 +69,9 @@ class TaskListFragment : Fragment() {
     public fun updateList(list: List<TaskEntity>) {
         this.list = list
         taskListAdapter.setData(list)
+    }
+
+    override fun onItemClick(v: View?) {
+        taskListFragmentInterface?.onClick(v);
     }
 }
