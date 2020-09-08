@@ -16,13 +16,15 @@ class TaskListAdapter(list: List<TaskEntity>) : RecyclerView.Adapter<TaskListAda
         this.list = list
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textViewId: TextView? = itemView.findViewById(R.id.textViewIdTask)
-        val textViewTask: TextView? = itemView.findViewById(R.id.textViewTask)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val textViewId: TextView? = view.findViewById(R.id.textViewIdTask)
+        val textViewTask: TextView? = view.findViewById(R.id.textViewTask)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.task_list_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.task_list_item,
+            parent, false)
         return ViewHolder(v)
     }
 
