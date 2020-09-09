@@ -3,12 +3,13 @@ package com.instanect.task.create
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.instanect.task.R
 import com.instanect.task.business_layer.TaskEntity
-import kotlinx.android.synthetic.main.task_create_fragment.*
+import kotlinx.android.synthetic.main.task_operation_fragment.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -47,15 +48,20 @@ class TaskDetailFragment() : Fragment() {
         setHasOptionsMenu(true)
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.task_create_fragment, container, false)
+        return inflater.inflate(R.layout.task_operation_fragment, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if(idTask != -1)
+            taskOperationInterface.getTaskEntityFromIdTask(idTask)
+
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if(idTask != -1)
-            taskOperationInterface.getTaskEntityFromIdTask(idTask)
-    }
+         }
 
     private fun updateFragment(task: TaskEntity) {
         TODO("Not yet implemented")
@@ -70,7 +76,7 @@ class TaskDetailFragment() : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
-        inflater.inflate(R.menu.menu_create, menu);
+        inflater.inflate(R.menu.menu_operation, menu);
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -100,6 +106,6 @@ class TaskDetailFragment() : Fragment() {
 
     fun updateLayout(task: TaskEntity) {
         view?.findViewById<TextView>(R.id.textViewIdTask)?.text = task.idTask.toString()
-        view?.findViewById<TextView>(R.id.textViewTask)?.text = task.task
+        view?.findViewById<EditText>(R.id.editTextTask)?.setText( task.task)
     }
 }

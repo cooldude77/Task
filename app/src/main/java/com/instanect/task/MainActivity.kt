@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     override fun getTaskEntityFromIdTask(idTask: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            var task = getDb().taskDAO.findById(idTask)
+            val task = getDb().taskDAO.findById(idTask)
             withContext(Dispatchers.Main) {
                 val listFragment =
                     supportFragmentManager.findFragmentByTag("TAG_UPDATE") as TaskDetailFragment;
@@ -127,7 +127,6 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
     override fun onClick(v: View?) {
 
         val idTask = v?.findViewById<TextView>(R.id.textViewIdTask)?.text.toString().toInt()
-        val task = getDb().taskDAO.findById(idTask);
 
         supportFragmentManager.beginTransaction()
             .replace(
