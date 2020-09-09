@@ -24,11 +24,11 @@ class TaskListFragment : Fragment(),TaskListAdapterListener {
 
     companion object {
 
-        public fun newInstance(
+        fun newInstance(
             list: List<TaskEntity>,
             taskListFragmentInterface: TaskListFragmentInterface?
         ): TaskListFragment {
-            var f = TaskListFragment()
+            val f = TaskListFragment()
             f.list = list
             f.taskListFragmentInterface = taskListFragmentInterface
             return f
@@ -46,14 +46,9 @@ class TaskListFragment : Fragment(),TaskListAdapterListener {
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_task_list)
 
         recycler.adapter = taskListAdapter
-        recycler.layoutManager = LinearLayoutManager(activity);
+        recycler.layoutManager = LinearLayoutManager(activity)
         // Inflate the layout for this fragment
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     override fun onResume() {
@@ -63,15 +58,15 @@ class TaskListFragment : Fragment(),TaskListAdapterListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        taskListFragmentInterface?.onTaskListAdded();
+        taskListFragmentInterface?.onTaskListAdded()
     }
 
-    public fun updateList(list: List<TaskEntity>) {
+    fun updateList(list: List<TaskEntity>) {
         this.list = list
         taskListAdapter.setData(list)
     }
 
     override fun onItemClick(v: View?) {
-        taskListFragmentInterface?.onClick(v);
+        taskListFragmentInterface?.onClick(v)
     }
 }

@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
                     "TAG_CREATE"
                 )
                 .addToBackStack(null)
-                .commit();
+                .commit()
         }
     }
 
@@ -69,32 +69,54 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
     }
 
 
-    override fun onSavePressed(text: String) {
+    override fun onSavePressed(idTask: Int, text: String) {
 
         GlobalScope.launch { // coroutine on Main
+
             val db = getDb()
-            val task = TaskEntity()
-            task.task = text
-            db.taskDAO.insert(task)
-            Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
+
+            if (idTask == -1) {
+                val task = TaskEntity()
+                task.task = text
+                db.taskDAO.insert(task)
+                Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
+            } else {
+                val task = db.taskDAO.findById(idTask)
+                task.task = text
+                db.taskDAO.update(task)
+                Snackbar.make(findViewById(R.id.fab), "Task Updated", Snackbar.LENGTH_SHORT).show()
+
+            }
         }
     }
 
     override fun getTaskEntityFromIdTask(idTask: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             val task = getDb().taskDAO.findById(idTask)
+
             withContext(Dispatchers.Main) {
                 val listFragment =
-                    supportFragmentManager.findFragmentByTag("TAG_UPDATE") as TaskDetailFragment;
+                    supportFragmentManager.findFragmentByTag("TAG_UPDATE") as TaskDetailFragment
 
-                listFragment.updateLayout(task);
+                listFragment.updateLayout(task)
             }
         }
     }
 
+    override fun onDeletePressed(idTask: Int) {
+        GlobalScope.launch { // coroutine on Main
+            val db = getDb()
+            val task = db.taskDAO.findById(idTask)
+            db.taskDAO.delete(task)
+            Snackbar.make(findViewById(R.id.fab), "Task Deleted", Snackbar.LENGTH_SHORT).show()
+
+        }
+    }
+
+
     private fun loadList() {
         GlobalScope.launch(Dispatchers.IO) { // coroutine on Main
-            list = getDb().taskDAO.getAll();
+            list = getDb().taskDAO.getAll()
             withContext(Dispatchers.Main) {
                 updateList(list)
             }
@@ -109,12 +131,12 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
                 "TAG_LIST"
             )
             .addToBackStack(null)
-            .commit();
+            .commit()
     }
 
     private fun updateList(list: List<TaskEntity>) {
         val listFragment =
-            supportFragmentManager.findFragmentByTag("TAG_LIST") as TaskListFragment;
+            supportFragmentManager.findFragmentByTag("TAG_LIST") as TaskListFragment
 
         listFragment.updateList(list)
 

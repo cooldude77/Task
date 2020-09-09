@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "task")
-public class TaskEntity() {
+class TaskEntity {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -16,18 +16,17 @@ public class TaskEntity() {
 
     @NonNull
     @ColumnInfo(name = "task")
-    var task: String? = null
+    lateinit var task: String
 
     @NonNull
     @ColumnInfo(name = "createAt")
-    var createdAt: String? = null
+    var createdAt: String = Date(System.currentTimeMillis()).toString()
 
     @NonNull
     @ColumnInfo(name = "updatedAt")
-    var updatedAt: String? = null
+    var updatedAt: String
 
     init {
-        createdAt = Date(System.currentTimeMillis()).toString()
         updatedAt = createdAt
 
     }

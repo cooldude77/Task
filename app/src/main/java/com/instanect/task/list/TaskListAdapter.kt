@@ -12,7 +12,7 @@ class TaskListAdapter(list: List<TaskEntity>, taskListAdapterListener: TaskListA
     RecyclerView.Adapter<TaskListAdapter.ViewHolder>(),
     View.OnClickListener {
 
-    private var list: List<TaskEntity> = ArrayList();
+    private var list: List<TaskEntity> = ArrayList()
     private var taskListAdapterListener: TaskListAdapterListener? = null
 
     init {
@@ -36,7 +36,7 @@ class TaskListAdapter(list: List<TaskEntity>, taskListAdapterListener: TaskListA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val task = list[position];
+        val task = list[position]
         holder.textViewTask?.text = task.task
         holder.textViewId?.text = task.idTask.toString()
         holder.itemView.setOnClickListener(this)
