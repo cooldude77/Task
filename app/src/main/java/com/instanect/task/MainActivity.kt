@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.instanect.task.business_layer.TaskDatabase
 import com.instanect.task.business_layer.TaskEntity
-import com.instanect.task.create.TaskCreateFragment
-import com.instanect.task.create.TaskCreateInterface
+import com.instanect.task.create.TaskDetailFragment
+import com.instanect.task.create.TaskOperationInterface
 import com.instanect.task.list.TaskListFragment
 import com.instanect.task.list.TaskListFragmentInterface
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentInterface {
+class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragmentInterface {
 
     private var list: List<TaskEntity> = ArrayList()
 
@@ -35,17 +36,12 @@ class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentI
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.id_fragment,
-                    TaskCreateFragment.newInstance(this),
+                    TaskDetailFragment.newInstance(this),
                     "TAG_CREATE"
                 )
                 .addToBackStack(null)
                 .commit();
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     private fun getDb(): TaskDatabase {
@@ -77,11 +73,22 @@ class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentI
 
         GlobalScope.launch { // coroutine on Main
             val db = getDb()
-
             val task = TaskEntity()
             task.task = text
             db.taskDAO.insert(task)
             Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun getTaskEntityFromIdTask(idTask: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var task = getDb().taskDAO.findById(idTask)
+            withContext(Dispatchers.Main) {
+                val listFragment =
+                    supportFragmentManager.findFragmentByTag("TAG_UPDATE") as TaskDetailFragment;
+
+                listFragment.updateLayout(task);
+            }
         }
     }
 
@@ -118,6 +125,17 @@ class MainActivity : AppCompatActivity(), TaskCreateInterface, TaskListFragmentI
     }
 
     override fun onClick(v: View?) {
+
+        val idTask = v?.findViewById<TextView>(R.id.textViewIdTask)?.text.toString().toInt()
+        val task = getDb().taskDAO.findById(idTask);
+
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.id_fragment,
+                TaskDetailFragment.newInstance(this, idTask),
+                "TAG_UPDATE"
+            )
+            .commit()
 
     }
 

@@ -1,26 +1,42 @@
 package com.instanect.task.create
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.instanect.task.R
+import com.instanect.task.business_layer.TaskEntity
 import kotlinx.android.synthetic.main.task_create_fragment.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class TaskCreateFragment : Fragment() {
+class TaskDetailFragment() : Fragment() {
 
-    private lateinit var taskCreateInterface: TaskCreateInterface
-    private var isNew: Boolean = true
+    private  var idTask: Int = -1
+    private lateinit var taskOperationInterface: TaskOperationInterface
 
     companion object {
-        public fun newInstance(taskCreateInterface: TaskCreateInterface): TaskCreateFragment {
-            var f = TaskCreateFragment();
-            f.taskCreateInterface = taskCreateInterface
+        public fun newInstance(
+            taskCreateInterface: TaskOperationInterface,
+            idTask: Int
+        ): TaskDetailFragment {
+            val f = TaskDetailFragment();
+            f.idTask = idTask
+            f.taskOperationInterface = taskCreateInterface
             return f
         }
+        public fun newInstance(
+            taskCreateInterface: TaskOperationInterface
+        ): TaskDetailFragment {
+            val f = TaskDetailFragment();
+            f.taskOperationInterface = taskCreateInterface
+            return f
+        }
+
+
     }
 
     override fun onCreateView(
@@ -28,13 +44,21 @@ class TaskCreateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        if (arguments == null)
-            isNew = true;
-
         setHasOptionsMenu(true)
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.task_create_fragment, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if(idTask != -1)
+            taskOperationInterface.getTaskEntityFromIdTask(idTask)
+    }
+
+    private fun updateFragment(task: TaskEntity) {
+        TODO("Not yet implemented")
     }
 
     override fun onResume() {
@@ -61,7 +85,7 @@ class TaskCreateFragment : Fragment() {
     private fun validateAndSave() {
 
         (activity as AppCompatActivity).supportFragmentManager.popBackStack();
-        taskCreateInterface.onSavePressed(editTextTask.text.toString());
+        taskOperationInterface.onSavePressed(editTextTask.text.toString());
 
     }
 
@@ -72,5 +96,10 @@ class TaskCreateFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false);
+    }
+
+    fun updateLayout(task: TaskEntity) {
+        view?.findViewById<TextView>(R.id.textViewIdTask)?.text = task.idTask.toString()
+        view?.findViewById<TextView>(R.id.textViewTask)?.text = task.task
     }
 }
