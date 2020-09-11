@@ -65,12 +65,6 @@ class TaskDetailFragment : Fragment() {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (idTask != -1)
-            taskOperationInterface.getTaskEntityFromIdTask(idTask)
-    }
-
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -81,8 +75,8 @@ class TaskDetailFragment : Fragment() {
         menu.clear()
         inflater.inflate(R.menu.menu_operation, menu)
 
-        if (idTask == -1)
-            menu.findItem(R.id.delete).isVisible = false
+        //   if (idTask == -1)
+        //     menu.findItem(R.id.delete).isVisible = false
 
         super.onCreateOptionsMenu(menu, inflater)
     }

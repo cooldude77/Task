@@ -1,23 +1,25 @@
 package com.instanect.task
 
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intended
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.activityScenarioRule
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4ClassRunner::class)
 class MainActivityTest {
     @get:Rule
-    val intentsTestRule = IntentsTestRule(MainActivity::class.java)
+    var activityScenarioRule = activityScenarioRule<MainActivity>()
 
-    public fun setUp(){
+    fun setUp() {
     }
+
     @Test
-    public fun testActivityStarted() {
-        Intents.init();
-        intended(hasComponent(MainActivity::class.java.name))
-        Intents.release();
+    fun testActivityStarted() {
+        onView(withId(R.id.fab)).perform(click())
     }
 
 }
