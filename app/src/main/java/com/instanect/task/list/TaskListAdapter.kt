@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instanect.task.R
-import com.instanect.task.business_layer.TaskEntity
+import com.instanect.task.business_layer.database.TaskEntity
 
 class TaskListAdapter(list: List<TaskEntity>, taskListAdapterListener: TaskListAdapterListener) :
     RecyclerView.Adapter<TaskListAdapter.ViewHolder>(),

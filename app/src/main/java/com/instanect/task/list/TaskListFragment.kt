@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instanect.task.R
-import com.instanect.task.business_layer.TaskEntity
+import com.instanect.task.business_layer.database.TaskEntity
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.

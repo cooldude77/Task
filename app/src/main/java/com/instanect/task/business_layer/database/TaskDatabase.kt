@@ -1,4 +1,4 @@
-package com.instanect.task.business_layer
+package com.instanect.task.business_layer.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

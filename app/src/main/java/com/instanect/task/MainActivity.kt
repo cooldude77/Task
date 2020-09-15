@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
-import com.instanect.task.business_layer.TaskDatabase
-import com.instanect.task.business_layer.TaskEntity
+import com.instanect.task.business_layer.database.TaskDatabase
+import com.instanect.task.business_layer.database.TaskEntity
 import com.instanect.task.create.TaskDetailFragment
 import com.instanect.task.create.TaskOperationInterface
 import com.instanect.task.list.TaskListFragment

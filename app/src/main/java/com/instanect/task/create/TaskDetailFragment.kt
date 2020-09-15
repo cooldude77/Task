@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.instanect.task.R
-import com.instanect.task.business_layer.TaskEntity
+import com.instanect.task.business_layer.database.TaskEntity
 import kotlinx.android.synthetic.main.task_operation_fragment.*
 
 
