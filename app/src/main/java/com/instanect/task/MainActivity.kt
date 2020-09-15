@@ -9,21 +9,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.instanect.task.business_layer.database.TaskDatabase
+import com.instanect.task.business_layer.database.TaskDatabaseHelper
 import com.instanect.task.business_layer.database.TaskEntity
 import com.instanect.task.create.TaskDetailFragment
 import com.instanect.task.create.TaskOperationInterface
 import com.instanect.task.list.TaskListFragment
 import com.instanect.task.list.TaskListFragmentInterface
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragmentInterface {
 
     private var list: List<TaskEntity> = ArrayList()
+
+    @Inject
+    lateinit var taskDatabaseHelper: TaskDatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
         loadListFragment()
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(
                     R.id.id_fragment,
