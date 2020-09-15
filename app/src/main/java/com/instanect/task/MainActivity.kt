@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import com.instanect.task.business_layer.database.TaskDatabase
 import com.instanect.task.business_layer.database.TaskDatabaseHelper
@@ -51,10 +50,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
     }
 
     private fun getDb(): TaskDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            TaskDatabase::class.java, "task.db"
-        ).build()
+        return taskDatabaseHelper.getDatabase()
 
     }
 

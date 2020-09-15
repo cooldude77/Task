@@ -6,7 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class TaskApplication : Application() {
+open class TaskApplication : Application() {
     @Inject
     lateinit var taskDatabaseHelper: TaskDatabaseHelper
 }
