@@ -3,19 +3,25 @@ package com.instanect.task
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.activityScenarioRule
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.instanect.task.business_layer.di.TaskModule
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4ClassRunner::class)
+@UninstallModules(TaskModule::class)
+@HiltAndroidTest
 class MainActivityTest {
     @get:Rule
-    var activityScenarioRule = activityScenarioRule<MainActivity>()
+    var activityScenarioRule = HiltAndroidRule(this)
 
-    fun setUp() {
+    @Before
+    fun init() {
+        activityScenarioRule.inject()
     }
+
 
     @Test
     fun testActivityStarted() {
