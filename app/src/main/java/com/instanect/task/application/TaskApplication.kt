@@ -5,7 +5,7 @@ import com.instanect.task.di.AppComponent
 import com.instanect.task.di.DaggerAppComponent
 import com.instanect.task.di.MainActivityModule
 
-class TaskApplication : Application() {
+open class TaskApplication : Application() {
     val component: AppComponent by lazy {
         DaggerAppComponent.builder()
             .mainActivityModule(MainActivityModule(applicationContext))
