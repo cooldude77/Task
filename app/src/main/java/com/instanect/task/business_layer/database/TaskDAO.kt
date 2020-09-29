@@ -1,9 +1,6 @@
 package com.instanect.task.business_layer.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface TaskDAO {
@@ -16,11 +13,11 @@ interface TaskDAO {
     @Delete
     fun delete(task: TaskEntity)
 
-    // @Query("SELECT * FROM task")
-    // fun getAll(): List<TaskEntity>
+    @Query("SELECT * FROM task")
+    fun getAll(): List<TaskEntity>
 
-    // @Query("SELECT * FROM task WHERE idTask LIKE :idTask")
-    //fun findById(idTask: Int): TaskEntity
+    @Query("SELECT * FROM task WHERE idTask LIKE :idTask")
+    fun findById(idTask: Int): TaskEntity
 
 
 }

@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
                 db.taskDAO.insert(task)
                 Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
             } else {
-                //    val task = db.taskDAO.findById(idTask)
-                //  task.task = text
-                // db.taskDAO.update(task)
+                val task = db.taskDAO.findById(idTask)
+                task.task = text
+                db.taskDAO.update(task)
                 Snackbar.make(findViewById(R.id.fab), "Task Updated", Snackbar.LENGTH_SHORT).show()
 
             }
@@ -92,13 +92,13 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     override fun getTaskEntityFromIdTask(idTask: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            //val task = getDb().taskDAO.findById(idTask)
+            val task = getDb().taskDAO.findById(idTask)
 
             withContext(Dispatchers.Main) {
                 val listFragment =
                     supportFragmentManager.findFragmentByTag("TAG_UPDATE") as TaskDetailFragment
 
-                //listFragment.updateLayout(task)
+                listFragment.updateLayout(task)
             }
         }
     }
@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
     override fun onDeletePressed(idTask: Int) {
         GlobalScope.launch { // coroutine on Main
             val db = getDb()
-            //     val task = db.taskDAO.findById(idTask)
-            //   db.taskDAO.delete(task)
+            val task = db.taskDAO.findById(idTask)
+            db.taskDAO.delete(task)
             Snackbar.make(findViewById(R.id.fab), "Task Deleted", Snackbar.LENGTH_SHORT).show()
 
         }
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     private fun loadList() {
         GlobalScope.launch(Dispatchers.IO) { // coroutine on Main
-            //  list = getDb().taskDAO.getAll()
+            list = getDb().taskDAO.getAll()
             withContext(Dispatchers.Main) {
                 updateList(list)
             }

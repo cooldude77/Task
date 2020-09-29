@@ -51,9 +51,9 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha07'
 
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
 
