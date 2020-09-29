@@ -6,8 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
+import com.instanect.task.application.TaskApplication
 import com.instanect.task.business_layer.database.TaskDatabase
 import com.instanect.task.business_layer.database.TaskEntity
 import com.instanect.task.create.TaskDetailFragment
@@ -19,16 +19,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragmentInterface {
 
     private var list: List<TaskEntity> = ArrayList()
 
+    @Inject
+    lateinit var taskDatabase: TaskDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        (application as TaskApplication).component.inject(this)
 
         loadListFragment()
 
@@ -44,13 +49,6 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
         }
     }
 
-    private fun getDb(): TaskDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            TaskDatabase::class.java, "task.db"
-        ).build()
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -73,17 +71,16 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
         GlobalScope.launch { // coroutine on Main
 
-            val db = getDb()
 
             if (idTask == -1) {
                 val task = TaskEntity()
                 task.task = text
-                db.taskDAO.insert(task)
+                taskDatabase.taskDAO.insert(task)
                 Snackbar.make(findViewById(R.id.fab), "Task Created", Snackbar.LENGTH_SHORT).show()
             } else {
-                val task = db.taskDAO.findById(idTask)
+                val task = taskDatabase.taskDAO.findById(idTask)
                 task.task = text
-                db.taskDAO.update(task)
+                taskDatabase.taskDAO.update(task)
                 Snackbar.make(findViewById(R.id.fab), "Task Updated", Snackbar.LENGTH_SHORT).show()
 
             }
@@ -92,7 +89,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     override fun getTaskEntityFromIdTask(idTask: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            val task = getDb().taskDAO.findById(idTask)
+            val task = taskDatabase.taskDAO.findById(idTask)
 
             withContext(Dispatchers.Main) {
                 val listFragment =
@@ -105,9 +102,8 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     override fun onDeletePressed(idTask: Int) {
         GlobalScope.launch { // coroutine on Main
-            val db = getDb()
-            val task = db.taskDAO.findById(idTask)
-            db.taskDAO.delete(task)
+            val task = taskDatabase.taskDAO.findById(idTask)
+            taskDatabase.taskDAO.delete(task)
             Snackbar.make(findViewById(R.id.fab), "Task Deleted", Snackbar.LENGTH_SHORT).show()
 
         }
@@ -116,7 +112,7 @@ class MainActivity : AppCompatActivity(), TaskOperationInterface, TaskListFragme
 
     private fun loadList() {
         GlobalScope.launch(Dispatchers.IO) { // coroutine on Main
-            list = getDb().taskDAO.getAll()
+            list = taskDatabase.taskDAO.getAll()
             withContext(Dispatchers.Main) {
                 updateList(list)
             }
