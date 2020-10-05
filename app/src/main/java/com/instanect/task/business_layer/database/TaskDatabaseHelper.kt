@@ -6,10 +6,10 @@ import androidx.room.Room
 open class TaskDatabaseHelper(private val applicationContext: Context) {
 
 
-    fun getDatabase(): TaskDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            TaskDatabase::class.java, "task.db"
-        ).build()
-    }
+   open fun getDatabase(): TaskDatabase {
+       return Room.databaseBuilder(
+           applicationContext,
+           TaskDatabase::class.java, "task.db"
+       ).build()
+   }
 }
